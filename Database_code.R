@@ -81,10 +81,11 @@
     if(file.size(paste0(never_delete_location, filename)) == 0){
       warning("At least one file in the other_data_never_delete directory was not downloaded correctly, issue with file size")
     }
-    if(file.access(paste0(imputed_location, filename), mode = 0) != 0){
+
+    if(file.access(paste0(never_delete_location, filename), mode = 0) != 0){
       warning("At least one file in the other_data_never_delete directory was not downloaded correctly, issue with file accessibility")
     }
-    if(file.access(paste0(imputed_location, filename), mode = 4) != 0){
+    if(file.access(paste0(never_delete_location, filename), mode = 4) != 0){
       warning("At least one file in the other_data_never_delete directory was not downloaded correctly, issue with reading file")
     }
   }
@@ -202,9 +203,7 @@
   
   # LE adding check for manual entry database file size, accessibility, and readability, print warning message if not downloaded correctly 
   
-  manual_entry_database_file_size <- file.size(paste0(database_location, "Manual data entry/MANUAL_ENTRY_DATABASE.xlsx"))
-  
-  if(manual_entry_database_file_size == 0){
+  if(file.size(paste0(database_location, "Manual data entry/MANUAL_ENTRY_DATABASE.xlsx")) == 0){
     warning("The manual entry database was not downloaded correctly, issue with file size")
   }
   
@@ -2644,7 +2643,7 @@
       measure_temp_sdq$date_temp <- as.Date(measure_temp_sdq$Overall_date)
       measure_temp_sdq <- measure_temp_sdq %>% select(-Overall_date)
     } else if (measure_name=="s_scaredshort_" | measure_name=="p_scaredshort_") {
-      measure_temp_sdq[,5:12] <- lapply(measure_temp_sdq[,5:12], as.numeric)
+      measure_temp_sdq[,5:13] <- lapply(measure_temp_sdq[,5:13], as.numeric)
       measure_temp_sdq$date_temp <- as.Date(measure_temp_sdq$Overall_date)
       measure_temp_sdq <- measure_temp_sdq %>% select(-Overall_date)
     } else {
@@ -2782,7 +2781,8 @@
     }
     
     if (measure_name=="s_scaredshort_" | measure_name=="p_scaredshort_") {
-      measure_temp_sdq$temptotal <- measure_temp_sdq %>% select(matches(measure_name)) %>% rowSums(na.rm=TRUE)
+      #24:41 are scared related, 42:45 are ptsd related
+      measure_temp_sdq$temptotal <- measure_temp_sdq %>% select(matches(paste0(measure_name,"24_no_reason")):matches(paste0(measure_name,"41_shy")))%>% rowSums(na.rm=TRUE)
     } else if (measure_name=="mmi_recovery_") {
       measure_temp_sdq$temptotal <- c(0)
     } else {
