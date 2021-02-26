@@ -3437,6 +3437,8 @@ if (file_save_check_combined$date_diff[1]==0) {
   Psychometrics_treatment %>% write_xlsx(paste0(database_location,"MASTER_DATABASE_CLINICAL_updated.xlsx"))
 }
 
+#Chana requested only the ones that have scheduling set to 3 to show up on the supervision report
+CBT_report = CBT_report %>% filter(Scheduling_status == 3)
 CBT_report %>% write_xlsx(paste0(CBT_location, "MASTER_DATABASE_CBT.xlsx"))
 CBT_report %>% write_xlsx(paste0(CBT_backup, "MASTER_DATABASE_CBT_", todays_date_formatted, ".xlsx"))
 
@@ -3613,7 +3615,7 @@ measures_dataset_tminus2_long$MFQ_flag <- gsub("NA; ", "", measures_dataset_tmin
 measures_dataset_tminus2_long$MFQ_flag <- na_if(measures_dataset_tminus2_long$MFQ_flag, "NA")
 
 # comparing to previous day's sheet: 
-prev_crisis_file <- list.files(path = paste0(database_location, "COVID19/"), pattern = "^CRISIS_subset_2021", all.files = FALSE,
+prev_crisis_file <- list.files(path = paste0(database_location, "COVID19/"), pattern = "^CRISIS_subset_20", all.files = FALSE,
                                full.names = FALSE, recursive = FALSE, ignore.case = FALSE, include.dirs = FALSE, no.. = FALSE)
 prev_crisis_file_time <- file.mtime(paste0(database_location, "COVID19/", prev_crisis_file)) %>% as.Date()
 prev_crisis_combined <- tibble(File=c(prev_crisis_file), Date=c(prev_crisis_file_time))
